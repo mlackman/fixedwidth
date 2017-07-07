@@ -223,9 +223,12 @@ class FixedWidth(object):
                 'decimal': Decimal,
                 'numeric': lambda x: str(x).strip(),
             }
-
-            self.data[field_name] = conversion[self.config[field_name]\
-                ['type']](fw_string[start_pos - 1:self.config[field_name]['end_pos']])
+            str_value = fw_string[start_pos - 1:self.config[field_name]['end_pos']]
+            data_type = self.config[field_name]['type']
+            if data_type == 'integer' and len(str_value.strip()) == 0:
+              self.data[field_name] = None
+            else:
+              self.data[field_name] = conversion[data_type](str_value)
 
         return self.data
 

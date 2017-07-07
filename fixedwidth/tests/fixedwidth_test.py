@@ -170,5 +170,27 @@ class TestFixedWidth(unittest.TestCase):
         self.assertEquals(values["elevation"], -100)
         self.assertEquals(values["temperature"], Decimal('98.6'))
 
+
+class TestHandlingOfEmptyInteger(unittest.TestCase):
+  CONFIG = {
+    'someint': {
+      'required': False,
+      'type': 'integer',
+      'start_pos': 1,
+      'length': 8,
+      'padding': ' ',
+      'alignment': 'left'
+    }
+  }
+  def test_null_is_returned_for_empty_integer(self):
+    fw_config = deepcopy(self.CONFIG)
+
+    fw_obj = FixedWidth(fw_config)
+    fw_obj.line = "        "
+    values = fw_obj.data
+    self.assertIsNone(values['someint'])
+
+
+
 if __name__ == '__main__':
     unittest.main()
